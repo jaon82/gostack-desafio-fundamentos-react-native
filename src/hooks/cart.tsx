@@ -43,11 +43,9 @@ const CartProvider: React.FC = ({ children }) => {
       );
 
       if (productIndex > -1) {
-        setProducts(stateProducts => {
-          const productsUpdated = stateProducts;
-          productsUpdated[productIndex].quantity += 1;
-          return productsUpdated;
-        });
+        const productsUpdated = [...products];
+        productsUpdated[productIndex].quantity += 1;
+        setProducts(productsUpdated);
       }
     },
     [products],
@@ -75,11 +73,9 @@ const CartProvider: React.FC = ({ children }) => {
       );
 
       if (productIndex > -1) {
-        setProducts(stateProducts => {
-          const productsUpdated = stateProducts;
-          productsUpdated[productIndex].quantity -= 1;
-          return productsUpdated;
-        });
+        const productsUpdated = [...products];
+        productsUpdated[productIndex].quantity -= 1;
+        setProducts(productsUpdated);
       }
     },
     [products],
