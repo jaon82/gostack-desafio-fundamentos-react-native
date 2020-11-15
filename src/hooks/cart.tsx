@@ -30,7 +30,12 @@ const CartProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     async function loadProducts(): Promise<void> {
-      // TODO LOAD ITEMS FROM ASYNC STORAGE
+      const storageProducts = await AsyncStorage.getItem(
+        '@GoMarketplace:products',
+      );
+      if (storageProducts) {
+        setProducts(JSON.parse(storageProducts));
+      }
     }
 
     loadProducts();
@@ -46,6 +51,10 @@ const CartProvider: React.FC = ({ children }) => {
         const productsUpdated = [...products];
         productsUpdated[productIndex].quantity += 1;
         setProducts(productsUpdated);
+        await AsyncStorage.setItem(
+          '@GoMarketplace:products',
+          JSON.stringify(productsUpdated),
+        );
       }
     },
     [products],
@@ -58,7 +67,12 @@ const CartProvider: React.FC = ({ children }) => {
       );
 
       if (!productExists) {
-        setProducts([...products, { ...product, quantity: 1 }]);
+        const productsUpdated = [...products, { ...product, quantity: 1 }];
+        setProducts(productsUpdated);
+        await AsyncStorage.setItem(
+          '@GoMarketplace:products',
+          JSON.stringify(productsUpdated),
+        );
       } else {
         increment(product.id);
       }
@@ -81,6 +95,10 @@ const CartProvider: React.FC = ({ children }) => {
           productsUpdated.splice(productIndex, 1);
           setProducts(productsUpdated);
         }
+        await AsyncStorage.setItem(
+          '@GoMarketplace:products',
+          JSON.stringify(productsUpdated),
+        );
       }
     },
     [products],
