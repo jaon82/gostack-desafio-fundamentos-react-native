@@ -36,17 +36,54 @@ const CartProvider: React.FC = ({ children }) => {
     loadProducts();
   }, []);
 
-  const addToCart = useCallback(async product => {
-    // TODO ADD A NEW ITEM TO THE CART
-  }, []);
+  const increment = useCallback(
+    async id => {
+      const productIndex = products.findIndex(
+        stateProduct => stateProduct.id === id,
+      );
 
-  const increment = useCallback(async id => {
-    // TODO INCREMENTS A PRODUCT QUANTITY IN THE CART
-  }, []);
+      if (productIndex > -1) {
+        setProducts(stateProducts => {
+          const productsUpdated = stateProducts;
+          productsUpdated[productIndex].quantity += 1;
+          return productsUpdated;
+        });
+      }
+    },
+    [products],
+  );
 
-  const decrement = useCallback(async id => {
-    // TODO DECREMENTS A PRODUCT QUANTITY IN THE CART
-  }, []);
+  const addToCart = useCallback(
+    async product => {
+      const productExists = products.find(
+        stateProduct => stateProduct.id === product.id,
+      );
+
+      if (!productExists) {
+        setProducts([...products, { ...product, quantity: 1 }]);
+      } else {
+        increment(product.id);
+      }
+    },
+    [increment, products],
+  );
+
+  const decrement = useCallback(
+    async id => {
+      const productIndex = products.findIndex(
+        stateProduct => stateProduct.id === id,
+      );
+
+      if (productIndex > -1) {
+        setProducts(stateProducts => {
+          const productsUpdated = stateProducts;
+          productsUpdated[productIndex].quantity -= 1;
+          return productsUpdated;
+        });
+      }
+    },
+    [products],
+  );
 
   const value = React.useMemo(
     () => ({ addToCart, increment, decrement, products }),
