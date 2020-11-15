@@ -74,8 +74,13 @@ const CartProvider: React.FC = ({ children }) => {
 
       if (productIndex > -1) {
         const productsUpdated = [...products];
-        productsUpdated[productIndex].quantity -= 1;
-        setProducts(productsUpdated);
+        if (productsUpdated[productIndex].quantity > 1) {
+          productsUpdated[productIndex].quantity -= 1;
+          setProducts(productsUpdated);
+        } else {
+          productsUpdated.splice(productIndex, 1);
+          setProducts(productsUpdated);
+        }
       }
     },
     [products],
